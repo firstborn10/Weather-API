@@ -1,0 +1,11 @@
+<!doctype html>
+<title>Weather</title>
+<h1>Enter City and State for Current Weather</h1>
+<form method="POST" action="{{ url_for('weather_form') }}">
+  {{ form.csrf_token }}
+  {{ form.city.label }}
+  {{ form.city }}
+  {{ form.state.label }}
+  {{ form.state }}
+  <input type="submit" value="Submit">
+</form>

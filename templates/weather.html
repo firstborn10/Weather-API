@@ -1,0 +1,18 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ response['name'] }} Weather</title>
+</head>
+<body>
+    <h1>Weather for {{ response['name'] }}, {{ form.state.data }}</h1>
+    <p>Condition: {{ response['weather'][0]['description'] }}</p>
+    <p>Temperature: {{ response['main']['temp'] }}°</p>
+    <p>Feels Like: {{ response['main']['feels_like'] }}°</p>
+    <p>Humidity: {{ response['main']['humidity'] }}%</p>
+    <p>Wind Speed: {{ response['wind']['speed'] }}</p>
+    <p>Built using Openweathermap.org API.</p>
+</body>
+</html>
