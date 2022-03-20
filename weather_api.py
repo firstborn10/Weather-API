@@ -4,10 +4,11 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
+from private import api_key, secret_key
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SECRET_KEY'] = f'{secret_key}'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/flaskweather'
 db = SQLAlchemy(app)
 
 
@@ -28,6 +29,10 @@ class City(db.Model):
     state = db.Column(db.String(2), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __init__(self, city, state):
+        self.city = city
+        self.state = state
+
 
 class WeatherForm(FlaskForm):
     city = StringField('city', [validators.DataRequired()])
@@ -40,6 +45,9 @@ def weather_form():
     form = WeatherForm()
     if form.validate_on_submit():
         json_response = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={form.city.data}'
-                                f',US-{form.state.data}&units=imperial&appid=a54927fdb382ca2ead788dda7e720314').json()
+                                f',US-{form.state.data}&units=imperial&appid='f'{api_key}').json()
+        userinput = City(f'{form.city.data}', f'{form.state.data}')
+        db.session.add(userinput)
+        db.session.commit()
         return render_template('weather.html', form=form, response=json_response)
     return render_template('weather_form.html', form=form)
